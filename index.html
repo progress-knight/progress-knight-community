@@ -20,7 +20,7 @@
                 <div class="" style="font-size: large">Age <span id="ageDisplay">14</span> Day <span id="dayDisplay">0</span></div>
                 <div class="sidebar-element" style="color: gray">Lifespan: <span id="lifespanDisplay">70</span> years</div>
                 
-                <button id="pauseButton" class="w3-button button sidebar-element" onClick="setPause()">Pause</button>
+                <button id="pauseButton" class="w3-button button sidebar-element">Pause</button>
 
                 <span id="automation" class="inline" style="margin-left: 8px">
                     <span>
@@ -100,16 +100,16 @@
                 <span id="timeWarping">
                     <div style="font-size: large"><span style="color: rgb(204, 34, 219)">Time warping: </span><span id="timeWarpingDisplay"></span></div>
                     <div style="color: gray">Affects game speed</div>
-                    <button id="timeWarpingButton" class="w3-button button sidebar-element" style="margin-top: 5px; width:150px" onClick="setTimeWarping()">Enable warp</button>
+                    <button id="timeWarpingButton" class="w3-button button sidebar-element" style="margin-top: 5px; width:150px">Enable warp</button>
                 </span>
             </div>
 
             <div class="panel w3-margin-left" style="width: 900px; height: 40px; float: left">
-                <div class="w3-button w3-bar-item tabButton" id="jobTabButton" onClick="setTab(this, 'jobs')">Jobs</div>
-                <div class="w3-button w3-bar-item tabButton" onClick="setTab(this, 'skills')">Skills</div>
-                <div class="w3-button w3-bar-item tabButton" id="shopTabButton" onClick="setTab(this, 'shop')">Shop</div>
-                <div class="w3-button w3-bar-item tabButton" id="rebirthTabButton" onClick="setTab(this, 'rebirth')">Amulet</div>
-                <div class="w3-button w3-bar-item tabButton" onClick="setTab(this, 'settings')" style="float: right">Settings</div>
+                <div class="w3-button w3-bar-item tabButton" id="jobTabButton">Jobs</div>
+                <div class="w3-button w3-bar-item tabButton" id="skillTabButton">Skills</div>
+                <div class="w3-button w3-bar-item tabButton" id="shopTabButton">Shop</div>
+                <div class="w3-button w3-bar-item tabButton" id="rebirthTabButton">Amulet</div>
+                <div class="w3-button w3-bar-item tabButton" id="settingsTabButton" style="float: right">Settings</div>
             </div>
 
             <div class="panel w3-margin-left w3-margin-top w3-padding" style="width: 900px; height: auto; float: left">
@@ -165,7 +165,6 @@
                 <template class="rowItemTemplate">
                     <tr>
                         <td>
-                            
                             <button class="button item-button tooltip">
                                 <span class="name"></span>
                                 <span class="tooltipText">tooltip</span>
@@ -189,16 +188,25 @@
 
                 <template class="requiredRowTemplate">
                     <td class="w3-text-gray" style="padding-left: 16px" colspan=5>
-                        Required: 
-                        <span class="value" colspan=5>
-                            <span class="levels"></span>
-                            <span class="coins">
+                        <template class="levels">
+                            <span></span>
+                        </template>
+                        <template class="coins">
+                            <span>
                                 <span></span>
                                 <span></span>
                                 <span></span>
                                 <span></span>
                             </span>
-                            <span style="color: rgb(200, 0, 0)" class="evil"></span>
+                        </template>
+                        <template class="evil">
+                            <span style="color: rgb(200, 0, 0)"></span>
+                        </template>
+                        <template class="separator">
+                            <span>, </span>
+                        </template>
+                        Required: 
+                        <span class="value" colspan=5>
                         </span>
                     </td> 
                 </template>
@@ -244,7 +252,7 @@
                                 Something tells you that the amulet might transform even further after living for <b>2 whole centuries</b>...</span>
                             </i>
                             </br>
-                            <button class="w3-button button" style="margin-bottom: 8px; margin-top: 8px" onClick="rebirthOne()">Touch the eye</button>
+                            <button id="rebirthOne" class="w3-button button" style="margin-bottom: 8px; margin-top: 8px">Touch the eye</button>
                             </br>
                         </li>
                         <li style="margin: 8px;" id="rebirthNote3">
@@ -258,7 +266,7 @@
                                 <b><span id="evilGainDisplay"></span> evil</b>, which will heavily impact your future lives.
                             </i>
                             </br>
-                                <button class="w3-button button" style="margin-bottom: 8px; margin-top: 8px" onClick="rebirthTwo()">Embrace evil</button>
+                                <button id="rebirthTwo" class="w3-button button" style="margin-bottom: 8px; margin-top: 8px">Embrace evil</button>
                             </br>
                         </li>
                     </ul>
@@ -268,15 +276,15 @@
                     <ul>
                         <li>
                             <h2>Import/export save</h2>
-                            <button class="w3-button button" onClick="importGameData()">Import</button>
-                            <button class="w3-button button" onClick="exportGameData()">Export</button>
+                            <button id="importSave" class="w3-button button">Import</button>
+                            <button id="exportSave" class="w3-button button">Export</button>
                             <form style="margin-top: 16px"> 
                                 <input id="importExportBox" type="text" style="width:300px; height:30px"></input>
                             </form>
                         </li>
                         <li>
                             <h2>Toggle light/dark mode</h2>
-                            <button class="w3-button button" onClick="setLightDarkMode()">Toggle</button>
+                            <button id="LightDarkModeButton" class="w3-button button" onClick="setLightDarkMode()">Toggle</button>
                         </li>
                         <li>
                             <h2>Join the discord community!</h2>
@@ -286,7 +294,7 @@
                         </li>
                         <li>
                             <h2>Hard reset game</h2>
-                            <button class="w3-button button w3-red" onClick="resetGameData()">Reset</button>
+                            <button id="resetSave" class="w3-button button w3-red">Reset</button>
                         </li>
                     </ul>
                 </div>
@@ -295,8 +303,10 @@
     </div>
 </body>
 
-<script type="text/javascript" src="js/HackTimer.js"></script>
-<script type="text/javascript" src="js/classes.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/lib/HackTimer.js"></script>
+<script type="module" src="js/main.mjs"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) { main(); });
+</script>
 
 </html>
