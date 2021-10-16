@@ -1,7 +1,7 @@
 export default {
     startingDays: 365 * 14,
     startingCoins: 0,
-    gameSpeed: 400,
+    gameSpeed: 4,
     lifespan: 365 * 70,
     advancement: [
         {name: "Shop",              requirement: [{coins: 50}]},
