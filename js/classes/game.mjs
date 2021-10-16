@@ -201,8 +201,10 @@ export default class Game {
         this.rebirthCount = save["rebirth"];
         this.rebirthEvilCount = save["rebirthEvil"];
 
-        this.currentJob = this.jobMap.get(save["currentJob"]);
-        this.currentSkill = this.skillMap.get(save["currentSkill"]);
+        if (this.jobMap.has(save["currentJob"]))
+            this.currentJob = this.jobMap.get(save["currentJob"]);
+        if (this.skillMap.has(save["currentSkill"]))
+            this.currentSkill = this.skillMap.get(save["currentSkill"]);
         this.currentItems = this.loadItemList(this.itemMap, save['currentItems']);
 
         this.loadEntityList(this.entityMap, save["entitySave"]);
@@ -212,8 +214,11 @@ export default class Game {
         let list = [];
         for (let name of itemList) {
             let item = itemMap.get(name);
-            item.active = true;
-            list.push(item);
+
+            if (item !== undefined) {
+                item.active = true;
+                list.push(item);
+            }
         }
         return list;
     }
@@ -221,7 +226,11 @@ export default class Game {
     loadEntityList(entityMap, dict) {
         for (let name in dict) {
             if (dict[name] !== undefined) {
-                entityMap.get(name).load(dict[name]);
+                let entity = entityMap.get(name);
+
+                if (entity !== undefined) {
+                    entity.load(dict[name]);
+                }
             }
         }
     }
