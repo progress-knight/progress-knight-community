@@ -11,5 +11,6 @@ export default {
                      requirement: [{evil: 1}], },
 
     "Properties": {color: "#219ebc", unique: true},
-    "Misc":       {color: "#b56576"},
+    "Furniture":  {color: "#71492b"},
+    "Personnel":  {color: "#b56576"},
 }

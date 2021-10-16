@@ -10,7 +10,7 @@ export default function UI(document, game) {
 
 function updateAdvancement(document, game) {
     const elements = {
-        "Shop": document.getElementById("shopTabButton"),
+        "Home": document.getElementById("homeTabButton"),
         "Automation": document.getElementById("automation"),
         "Rebirth tab": document.getElementById("rebirthTabButton"),
         "Rebirth note 1": document.getElementById("rebirthNote1"),

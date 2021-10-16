@@ -6,13 +6,13 @@ export default function Tab(document, game) {
     if (!init) {
         document.getElementById("jobTabButton").addEventListener("click", function() { setTab(this, 'jobs'); });
         document.getElementById("skillTabButton").addEventListener("click", function() { setTab(this, 'skills'); });
-        document.getElementById("shopTabButton").addEventListener("click", function() { setTab(this, 'shop'); });
+        document.getElementById("homeTabButton").addEventListener("click", function() { setTab(this, 'home'); });
         document.getElementById("rebirthTabButton").addEventListener("click", function() { setTab(this, 'rebirth'); });
         document.getElementById("settingsTabButton").addEventListener("click", function() { setTab(this, 'settings'); });
         
         createAllRows(document, game, game.jobCategoryMap, "jobTable");
         createAllRows(document, game, game.skillCategoryMap, "skillTable")
-        createAllRows(document, game, game.itemCategoryMap, "itemTable") 
+        createAllRows(document, game, game.homeCategoryMap, "homeTable") 
         
         setTab(jobTabButton, "jobs");
         init = true;
@@ -27,7 +27,7 @@ export default function Tab(document, game) {
 
     updateRequiredRows(document, game, game.jobCategoryMap);
     updateRequiredRows(document, game, game.skillCategoryMap);
-    updateRequiredRows(document, game, game.itemCategoryMap);
+    updateRequiredRows(document, game, game.homeCategoryMap);
 }
 
 function setTab(element, selectedTab) {
@@ -49,7 +49,7 @@ function createAllRows(document, game, categoryMap, tableId) {
     
     let categoryType = categoryMap.values().next().value.type;
     var templates;
-    if (categoryType == "item") {
+    if (categoryType == "home") {
         templates = {
             headerRow: document.getElementsByClassName("headerRowItemTemplate")[0],
             row: document.getElementsByClassName("rowItemTemplate")[0],
@@ -83,7 +83,7 @@ function createHeaderRow(template, category) {
 
     if (category.type == "job") {
         headerRow.getElementsByClassName("valueType")[0].textContent = "Income/day";
-    } else if (category.type != "item") {
+    } else if (category.type != "home") {
         headerRow.getElementsByClassName("valueType")[0].textContent = "Effect";
     }
 
@@ -102,7 +102,7 @@ function createRow(template, game, category, entity) {
     row.getElementsByClassName("name")[0].textContent = entity.name;
     row.getElementsByClassName("tooltipText")[0].textContent = entity.tooltip;
 
-    if (category.type != "item") {
+    if (category.type != "home") {
         row.getElementsByClassName("progressBar")[0].onclick = function() { setTask(game, entity); }
     } else {
         row.getElementsByClassName("button")[0].onclick = function() { setItem(game, entity); }
@@ -125,7 +125,7 @@ function updateHeaderRows(document, game, categoryMap) {
         let headerRow = document.getElementsByClassName(className)[0];
         
         let maxLevelElement = headerRow.getElementsByClassName("maxLevel")[0];
-        category.type != "item" && game.rebirthCount > 0 ? maxLevelElement.classList.remove("hidden") : maxLevelElement.classList.add("hidden")
+        category.type != "home" && game.rebirthCount > 0 ? maxLevelElement.classList.remove("hidden") : maxLevelElement.classList.add("hidden")
         
         let skipSkillElement = headerRow.getElementsByClassName("skipSkill")[0]
         skipSkillElement.style.display = category.type == "skill" && game.autoLearned ? "block" : "none"
@@ -180,7 +180,6 @@ function updateItemRows(document, game, itemMap) {
         }
 
         row.classList.remove("hidden");
-        
         let button = row.getElementsByClassName("button")[0];
         button.disabled = game.coins < item.expense;
 

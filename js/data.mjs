@@ -4,8 +4,8 @@ import Job from "./classes/job.mjs";
 import jobData from "./data/job.mjs";
 import Skill from "./classes/skill.mjs";
 import skillData from "./data/skill.mjs";
-import Item from "./classes/item.mjs";
-import itemData from "./data/item.mjs";
+import HomeItem from "./classes/item.mjs";
+import homeItemData from "./data/home.mjs";
 import Category from "./classes/category.mjs";
 import categoryData from "./data/category.mjs";
 import Effect from "./classes/effect.mjs";
@@ -15,7 +15,7 @@ export default function init() {
     let newGame = new Game(gameData);
     newGame.jobMap = createData(Job, jobData);
     newGame.skillMap = createData(Skill, skillData);
-    newGame.itemMap = createData(Item, itemData);
+    newGame.itemMap = createData(HomeItem, homeItemData);
 
     newGame.entityMap = mergeMap(newGame.jobMap, newGame.skillMap, newGame.itemMap);
     newGame.taskMap = mergeMap(newGame.jobMap, newGame.skillMap);
@@ -23,7 +23,7 @@ export default function init() {
     newGame.categoryMap = createData(Category, categoryData);
     newGame.jobCategoryMap = createCategoryMap(newGame.categoryMap, newGame.jobMap, "job");
     newGame.skillCategoryMap = createCategoryMap(newGame.categoryMap, newGame.skillMap, "skill");
-    newGame.itemCategoryMap = createCategoryMap(newGame.categoryMap, newGame.itemMap, "item");
+    newGame.homeCategoryMap = createCategoryMap(newGame.categoryMap, newGame.itemMap, "home");
 
     newGame.currentJob = newGame.jobMap.get("Beggar");
     newGame.currentSkill = newGame.skillMap.get("Concentration");
