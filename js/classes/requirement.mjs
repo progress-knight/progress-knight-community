@@ -27,6 +27,9 @@ export default class Requirement {
         if (requirement.skill !== undefined) {
             return game.skillMap.get(requirement.skill).level >= requirement.level;
         }
+        if (requirement.mutation !== undefined) {
+            return game.mutationMap.get(requirement.mutation).level >= requirement.level;
+        }
         if (requirement.coins !== undefined) {
             return game.coins >= requirement.coins;
         }
@@ -35,6 +38,9 @@ export default class Requirement {
         }
         if (requirement.evil !== undefined) {
             return game.evil >= requirement.evil;
+        }
+        if (requirement.rebirthEvil !== undefined) {
+            return game.rebirthEvilCount >= requirement.rebirthEvil;
         }
     }
 }

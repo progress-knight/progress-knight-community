@@ -23,12 +23,20 @@ export function formatCoins(coins, element) {
     element.children[3].style.color = colors["c"]
 }
 
-export function formatNumber(number, element) {
+export function formatNumber(number, element, unit) {
     element.textContent = number.toFixed(1);
+
+    if (unit !== undefined) {
+        element.textContent += " " + unit;
+    }
 }
 
-export function formatLargeNumber(number, element) {
+export function formatLargeNumber(number, element, unit) {
     element.textContent = largeNumber(number);
+
+    if (unit !== undefined) {
+        element.textContent += " " + unit;
+    }
 }
 
 const units = ["", "k", "M", "B", "T", "q", "Q", "Sx", "Sp", "Oc"];

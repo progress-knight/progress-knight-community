@@ -82,7 +82,7 @@
 
                 <span id="evilInfo">
                     <div style="font-size: large"><span style="color: rgb(200, 0, 0)">Evil: </span><span id="evilDisplay"></span></div>
-                    <div style="color: gray" class="sidebar-element">Affects dark magic xp gain</div>
+                    <div style="color: gray" class="sidebar-element">Allow to buy evil mutation</div>
                 </span>
 
                 <!--
@@ -108,6 +108,7 @@
                 <div class="w3-button w3-bar-item tabButton" id="jobTabButton">Jobs</div>
                 <div class="w3-button w3-bar-item tabButton" id="skillTabButton">Skills</div>
                 <div class="w3-button w3-bar-item tabButton" id="homeTabButton">Home</div>
+                <div class="w3-button w3-bar-item tabButton" id="evilTabButton">Evil</div>
                 <div class="w3-button w3-bar-item tabButton" id="rebirthTabButton">Amulet</div>
                 <div class="w3-button w3-bar-item tabButton" id="settingsTabButton" style="float: right">Settings</div>
             </div>
@@ -131,6 +132,15 @@
                         <th style="width: 100px">Active</th>
                         <th style="width: 250px">Effect</th>
                         <th>Expense/day</th>
+                    </tr>
+                </template>
+
+                <template class="headerRowMutationTemplate">
+                    <tr>
+                        <th class="category" style="width: 250px">Mutation</th>
+                        <th>Level</th>
+                        <th style="width: 250px">Effect</th>
+                        <th>Cost</th>
                     </tr>
                 </template>
 
@@ -186,6 +196,24 @@
                     </tr>
                 </template>
 
+                <template class="rowMutationTemplate">
+                    <tr>
+                        <td>
+                            <button class="button item-button tooltip">
+                                <span class="name"></span>
+                                <span class="tooltipText">tooltip</span>
+                            </button>
+                            
+                        </td>
+
+                        <td class="level">Level</td>
+                        <td class="effect"></td>
+                        <td class="cost">
+ 
+                        </td>
+                    </tr>
+                </template>
+
                 <template class="requiredRowTemplate">
                     <td class="w3-text-gray" style="padding-left: 16px" colspan=5>
                         <template class="levels">
@@ -223,6 +251,11 @@
 
                 <div class="tab" id="home">
                     <table id="homeTable" class="w3-table w3-bordered">
+                    </table>
+                </div>
+
+                <div class="tab" id="evil">
+                    <table id="evilTable" class="w3-table w3-bordered">
                     </table>
                 </div>
 

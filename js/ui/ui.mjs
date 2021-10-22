@@ -18,6 +18,7 @@ function updateAdvancement(document, game) {
         "Rebirth note 3": document.getElementById("rebirthNote3"),
         "Time warping info": document.getElementById("timeWarping"),
         "Evil info": document.getElementById("evilInfo"),
+        "Evil tab": document.getElementById("evilTabButton"),
     }
 
     for (let [name, requirement] of game.advancementMap) {

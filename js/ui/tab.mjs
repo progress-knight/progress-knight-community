@@ -7,13 +7,15 @@ export default function Tab(document, game) {
         document.getElementById("jobTabButton").addEventListener("click", function() { setTab(this, 'jobs'); });
         document.getElementById("skillTabButton").addEventListener("click", function() { setTab(this, 'skills'); });
         document.getElementById("homeTabButton").addEventListener("click", function() { setTab(this, 'home'); });
+        document.getElementById("evilTabButton").addEventListener("click", function() { setTab(this, 'evil'); });
         document.getElementById("rebirthTabButton").addEventListener("click", function() { setTab(this, 'rebirth'); });
         document.getElementById("settingsTabButton").addEventListener("click", function() { setTab(this, 'settings'); });
         
         createAllRows(document, game, game.jobCategoryMap, "jobTable");
-        createAllRows(document, game, game.skillCategoryMap, "skillTable")
-        createAllRows(document, game, game.homeCategoryMap, "homeTable") 
-        
+        createAllRows(document, game, game.skillCategoryMap, "skillTable");
+        createAllRows(document, game, game.homeCategoryMap, "homeTable");
+        createAllRows(document, game, game.mutationCategoryMap, "evilTable")
+
         setTab(jobTabButton, "jobs");
         init = true;
     }
@@ -24,10 +26,12 @@ export default function Tab(document, game) {
     updateTaskRows(document, game, game.jobMap);
     updateTaskRows(document, game, game.skillMap);
     updateItemRows(document, game, game.itemMap);
+    updateMutationRows(document, game, game.mutationMap);
 
     updateRequiredRows(document, game, game.jobCategoryMap);
     updateRequiredRows(document, game, game.skillCategoryMap);
     updateRequiredRows(document, game, game.homeCategoryMap);
+    updateRequiredRows(document, game, game.mutationCategoryMap);
 }
 
 function setTab(element, selectedTab) {
@@ -53,6 +57,11 @@ function createAllRows(document, game, categoryMap, tableId) {
         templates = {
             headerRow: document.getElementsByClassName("headerRowItemTemplate")[0],
             row: document.getElementsByClassName("rowItemTemplate")[0],
+        };
+    } else if (categoryType == "mutation") {
+        templates = {
+            headerRow: document.getElementsByClassName("headerRowMutationTemplate")[0],
+            row: document.getElementsByClassName("rowMutationTemplate")[0],
         };
     } else {
         templates = {
@@ -83,7 +92,7 @@ function createHeaderRow(template, category) {
 
     if (category.type == "job") {
         headerRow.getElementsByClassName("valueType")[0].textContent = "Income/day";
-    } else if (category.type != "home") {
+    } else if (category.type == "skill") {
         headerRow.getElementsByClassName("valueType")[0].textContent = "Effect";
     }
 
@@ -98,14 +107,19 @@ function createHeaderRow(template, category) {
 function createRow(template, game, category, entity) {
     var row = template.content.firstElementChild.cloneNode(true);
     row.id = "row " + entity.name;
+
     row.classList.add(removeSpaces(category.name));
+
+
     row.getElementsByClassName("name")[0].textContent = entity.name;
     row.getElementsByClassName("tooltipText")[0].textContent = entity.tooltip;
 
-    if (category.type != "home") {
+    if (category.type == "job" || category.type == "skill") {
         row.getElementsByClassName("progressBar")[0].onclick = function() { setTask(game, entity); }
-    } else {
+    } else if (category.type == "home") {
         row.getElementsByClassName("button")[0].onclick = function() { setItem(game, entity); }
+    } else if (category.type == "mutation") {
+        row.getElementsByClassName("button")[0].onclick = function() { buyMutation(game, entity); }
     }
 
     return row
@@ -140,8 +154,8 @@ function updateTaskRows(document, game, taskMap) {
             row.classList.add("hidden");
             continue;
         }
-
         row.classList.remove("hidden");
+
         row.getElementsByClassName("level")[0].textContent = task.level;
 
         formatLargeNumber(task.getXpGain(), row.getElementsByClassName("xpGain")[0]);
@@ -186,8 +200,8 @@ function updateItemRows(document, game, itemMap) {
             row.classList.add("hidden");
             continue;
         }
-
         row.classList.remove("hidden");
+
         let button = row.getElementsByClassName("button")[0];
         button.disabled = game.coins < item.expense;
 
@@ -197,6 +211,35 @@ function updateItemRows(document, game, itemMap) {
 
         row.getElementsByClassName("effect")[0].textContent = item.effect.description;
         formatCoins(item.expense, row.getElementsByClassName("expense")[0]);
+        
+    }
+}
+
+
+function updateMutationRows(document, game, mutationMap) {
+    for (let mutation of mutationMap.values()) {
+        let row = document.getElementById("row " + mutation.name);
+
+        if (!mutation.requirement.checkCompleted(game)) {
+            row.classList.add("hidden");
+            continue;
+        }
+        row.classList.remove("hidden");
+
+        let button = row.getElementsByClassName("button")[0];
+
+        if (game.evil < mutation.cost) {
+            button.disabled = true;
+            button.style.backgroundColor = "red";
+        } else {
+            button.disabled = false;
+            button.style.backgroundColor = "black";
+        }
+        
+        row.getElementsByClassName("level")[0].textContent = mutation.level;
+        row.getElementsByClassName("effect")[0].textContent = mutation.effect.description;
+
+        formatNumber(mutation.cost, row.getElementsByClassName("cost")[0], "Evil");
     }
 }
 
@@ -255,6 +298,10 @@ function updateRequiredRows(document, game, categoryMap) {
                     element = levelElement.content.firstElementChild.cloneNode(true);
                     element.textContent = requirement.skill + " level " + requirement.level;
                 }
+                if (requirement.mutation !== undefined) {
+                    element = levelElement.content.firstElementChild.cloneNode(true);
+                    element.textContent = requirement.mutation + " level " + requirement.level;
+                }
                 if (requirement.coins !== undefined) {
                     element = coinElement.content.firstElementChild.cloneNode(true);
                     formatCoins(requirement.coins, element);
@@ -295,6 +342,10 @@ function setItem(game, item) {
 
 function skipSkill(game, skill, value) {
     game.automation.skipSkill(skill, value);
+}
+
+function buyMutation(game, mutation) {
+    game.buyMutation(mutation);
 }
 
 function removeSpaces(string) {

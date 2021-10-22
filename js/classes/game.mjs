@@ -139,6 +139,11 @@ export default class Game {
         this.currentItems = [];
     }
 
+    buyMutation(mutation) {
+        game.evil -= mutation.cost;
+        mutation.level += 1;
+    }
+
     reset(max) {
         this.coins = 0
         this.days = 365 * 14

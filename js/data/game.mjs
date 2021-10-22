@@ -11,6 +11,7 @@ export default {
         {name: "Rebirth note 2",    requirement: [{age: 65}]},
         {name: "Rebirth note 3",    requirement: [{age: 200}]},
         {name: "Time warping info", requirement: [{job: "Mage", level: 10}]},
-        {name: "Evil info",         requirement: [{evil: 1}]},
+        {name: "Evil info",         requirement: [{rebirthEvil: 1}]},
+        {name: "Evil tab",          requirement: [{rebirthEvil: 1}]},
     ]
 }
