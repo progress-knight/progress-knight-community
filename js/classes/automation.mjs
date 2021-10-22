@@ -24,6 +24,14 @@ export default class Automation {
         }
     }
 
+    skipSkill(skill, value) {
+        if (value) {
+            this.skipSkillSet.add(skill.name);
+        } else {
+            this.skipSkillSet.delete(skill.name);
+        }
+    }
+
     doAutoPromote(game) {
         let category = game.currentJob.category;
         let nextIndex = category.list.indexOf(game.currentJob) + 1;
@@ -42,20 +50,20 @@ export default class Automation {
 
     doAutoLearn(game) {
         var nextSkill = null;
-        var nextMaxXp = 0;
+        var nextMaxXp = null;
 
-        for (let skill in game.skillMap.values()) {
-            if (skill.requirement.completed && !skipSkillSet.has(skill.name)) {
+        for (let skill of game.skillMap.values()) {
+            if (skill.requirement.completed && !this.skipSkillSet.has(skill.name)) {
                 let maxXp = skill.getMaxXp() / skill.getXpGain();
 
-                if (nextMaxXp < maxXp) {
+                if (nextMaxXp === null || nextMaxXp > maxXp) {
                     nextSkill = skill;
                     nextMaxXp = maxXp;
                 }
             }
         }
 
-        if (skill != null)
+        if (nextSkill != null)
             game.currentSkill = nextSkill;
     }
 }

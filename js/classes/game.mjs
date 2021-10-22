@@ -11,7 +11,6 @@ export default class Game {
         this.evil = 0;
 
         this.paused = true;
-        this.autoLearned = false;
         this.timeWarpingEnabled = false;
     
         this.rebirthCount = 0;

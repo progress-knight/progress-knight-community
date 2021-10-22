@@ -128,7 +128,7 @@ function updateHeaderRows(document, game, categoryMap) {
         category.type != "home" && game.rebirthCount > 0 ? maxLevelElement.classList.remove("hidden") : maxLevelElement.classList.add("hidden")
         
         let skipSkillElement = headerRow.getElementsByClassName("skipSkill")[0]
-        skipSkillElement.style.display = category.type == "skill" && game.autoLearned ? "block" : "none"
+        skipSkillElement.style.display = category.type == "skill" && game.automation.autoLearn ? "block" : "none"
     }
 }
 
@@ -160,7 +160,15 @@ function updateTaskRows(document, game, taskMap) {
         valueElement.getElementsByClassName("effect")[0].style.display = task.type == "skill";
 
         var skipSkillElement = row.getElementsByClassName("skipSkill")[0];
-        skipSkillElement.style.display = task.type == "skill" && game.autoLearned ? "block" : "none";
+
+        if (task.type == "skill") {
+            skipSkillElement.style.display = game.automation.autoLearn ? "block" : "none";
+
+            let checkbox = row.getElementsByClassName("checkbox")[0];
+            checkbox.addEventListener("change", function() { skipSkill(game, task, this.checked); });
+        } else {
+            skipSkillElement.style.display = "none";
+        }
 
         if (task.type == "job") {
             formatCoins(task.income, valueElement.getElementsByClassName("income")[0]);
@@ -283,6 +291,10 @@ function setItem(game, item) {
     } else {
         game.putItem(item);
     }
+}
+
+function skipSkill(game, skill, value) {
+    game.automation.skipSkill(skill, value);
 }
 
 function removeSpaces(string) {
