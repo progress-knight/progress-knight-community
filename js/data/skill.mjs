@@ -22,7 +22,7 @@ export default {
                        requirement: [{skill: "Concentration", level: 30}, {skill: "Strength", level: 30}],
                        tooltip: "Strengthen your neurons through habit and repetition, improving strength gains throughout the body."},
 
-    "Mana control":      {category: "Magic", maxXp: 100, effect: {type: "category_pay", value: 0.01, category: "Arcane"},
+    "Mana control":      {category: "Magic", maxXp: 100, effect: {type: "category_xp", value: 0.01, category: "Arcane"},
                           requirement: [{skill: "Concentration", level: 200}, {skill: "Meditation", level: 200}], 
                           tooltip: "Strengthen your mana channels throughout your body, aiding you in becoming a more powerful magical user."},
     "Immortality":       {category: "Magic", maxXp: 100, effect: {type: "lifespan",     value: 0.33, multiplier: "log", },
@@ -31,6 +31,9 @@ export default {
     "Time warping":      {category: "Magic", maxXp: 100, effect: {type: "gamespeed",    value: 0.13, multiplier: "log", },
                           requirement: [{job: "Mage", level: 10}],
                           tooltip: "Bend space and time through forbidden techniques, resulting in a faster gamespeed.",},
+    "Ritual casting":    {category: "Magic", maxXp: 100, effect: {type: "category_pay", value: 0.01, category: "Arcane"},
+                          requirement: [{job: "Wizard", level: 10}], 
+                          tooltip: "Amplify and speed up the incantation of your ritual, improving the result and the money gain of them."},
     "Super immortality": {category: "Magic", maxXp: 100, effect: {type: "lifespan",     value: 0.01, },
                           requirement: [{job: "Chairman", level: 1000}],
                           tooltip: "Through harnessing ancient, forbidden techniques, lengthen your lifespan drastically beyond comprehension."},
