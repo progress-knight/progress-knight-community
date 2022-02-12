@@ -126,6 +126,9 @@ function createMulipliers(game) {
             list = list.concat(categoryXpDict[job.category.name]);
         }
 
+        let jobXp = Effect.createMultiplierList(game.entityMap.values(), "job_xp", job);
+        list = list.concat(jobXp);
+
         job.xpMultiplier = Multiplier.createMultiplier(list);
     }
 

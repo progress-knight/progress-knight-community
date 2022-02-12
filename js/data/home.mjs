@@ -35,13 +35,17 @@ export default {
     "Library":         {category: "Furniture", expense:  1500000, effect: {type: "all_skill_xp", value: 2  , }, 
                         tooltip: "Stores a collection of books, each containing vast amounts of information from basic life skills to complex magic spells.", },
 
-    "Personal squire":      {category: "Personnel", expense:      250, effect: {type: "category_xp", value: 2.5  , category: "Military"}, 
+    "Personal squire":      {category: "Personnel", expense:        250, effect: {type: "category_xp", value: 2.5, category: "Military"}, 
                              tooltip: "Follow you in the battle and carry your equipment. Allow you to concentrate on the engagement with the enemies.", },
-    "Butler":               {category: "Personnel", expense:     7500, effect: {type: "happiness",   value: 1.5, }, 
+    "Butler":               {category: "Personnel", expense:       7500, effect: {type: "happiness",   value: 1.5, }, 
                              tooltip: "Keeps your household clean at all times and also prepares three delicious meals per day, leaving you in a happier, stress-free mood.", },
-    "Exclusive apprentice": {category: "Personnel", expense:    22500, effect: {type: "category_xp", value: 3  , category: "Arcane"}, 
+    "Exclusive apprentice": {category: "Personnel", expense:      22500, effect: {type: "category_xp", value: 3  , category: "Arcane"}, 
                              tooltip: "Learn through your wisdom and knowledge. In exchange, help you to prepare rituals and spells, leading to faster magic casting speed.", },
-    "Private Secretary":    {category: "Personnel", expense:   675000, effect: {type: "all_job_xp",  value: 2, }, 
+    "Private Secretary":    {category: "Personnel", expense:     675000, effect: {type: "all_job_xp",  value: 2  , }, 
                              tooltip: "Assists you in completing day to day activities, giving you more time to be productive at work.", },
+    "Erudite Professor":    {category: "Personnel", expense:   13500000, effect: {type: "all_xp",      value: 1.5, }, 
+                             tooltip: "Tutors you in your learning processus. Knowns a large quantities of domain and can help you in all.", },
+    "Deputy Chairman":      {category: "Personnel", expense:  270000000, effect: {type: "job_xp",      value: 5  , job: "Chairman" }, 
+                             tooltip: "Assist you in your work as chairman. Replace you in your absence.", },
 
 }

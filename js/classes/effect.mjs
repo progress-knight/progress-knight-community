@@ -39,6 +39,13 @@ export default class Effect {
                     }
                 }
 
+                if (entity.effect.type.indexOf("job") == 0) {
+                    if (targetEntity === undefined
+                        || targetEntity.name != entity.effect.base.job) {
+                        continue;
+                    }
+                }
+
                 if (entity.effect.type.indexOf("category") == 0) {
                     if (targetEntity === undefined 
                         || (targetEntity.name != entity.effect.base.category &&
