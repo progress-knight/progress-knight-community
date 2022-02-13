@@ -10,7 +10,7 @@ import Mutation from "./classes/mutation.mjs";
 import mutationData from "./data/mutation.mjs";
 import Category from "./classes/category.mjs";
 import categoryData from "./data/category.mjs";
-import Effect from "./classes/effect.mjs";
+import Sheet from "./classes/sheet.mjs";
 import Multiplier from "./classes/multiplier.mjs"
 
 export default function init() {
@@ -33,7 +33,7 @@ export default function init() {
     newGame.currentSkill = newGame.skillMap.get("Concentration");
     newGame.putItem(newGame.itemMap.get("Homeless"));
 
-    createMulipliers(newGame);
+    setMulipliers(newGame);
 
     return newGame;
 };
@@ -77,78 +77,37 @@ function createCategoryMap(categoryMap, entityMap, categoryType) {
     return map;
 }
 
-function createMulipliers(game) {
-    let happiness = Effect.createMultiplierList(game.entityMap.values(), "happiness");
-    let allXp = Effect.createMultiplierList(game.entityMap.values(), "all_xp");
-    let allSkillXp = Effect.createMultiplierList(game.entityMap.values(), "all_skill_xp");
-    let allJobXp = Effect.createMultiplierList(game.entityMap.values(), "all_job_xp");
-    let allJobPay = Effect.createMultiplierList(game.entityMap.values(), "all_job_pay");
+function setMulipliers(game) {
+    let sheet = new Sheet();
+    sheet.createMultipliers(game);
 
-    game.happinessMultiplier = Multiplier.createMultiplier(happiness);
-    game.lifespanMultiplier = Effect.createMultiplier(game.entityMap.values(), "lifespan");
-    game.gamespeedMultiplier = Effect.createMultiplier(game.entityMap.values(), "gamespeed");
-    game.evilMultiplier = Effect.createMultiplier(game.entityMap.values(), "evil");
-
-    let categoryXpDict = {};
-    let categoryPayDict = {};
-
-    for (let category of game.categoryMap.values()) {
-        let categoryXp = Effect.createMultiplierList(game.entityMap.values(), "category_xp", category);
-        
-        if (categoryXp.length > 0) {
-            categoryXpDict[category.name] = categoryXp;
-        }
-
-        let categoryPay = Effect.createMultiplierList(game.entityMap.values(), "category_pay", category);
-        
-        if (categoryPay.length > 0) {
-            categoryPayDict[category.name] = categoryPay;
-        }
-    }
+    game.happinessMultiplier = sheet.getMultiplier("happiness");
+    game.lifespanMultiplier =  sheet.getMultiplier("lifespan");
+    game.gamespeedMultiplier = sheet.getMultiplier("gamespeed");
+    game.evilMultiplier = sheet.getMultiplier("evil");
 
     for (let skill of game.skillMap.values()) {
-        var list = allXp.concat(happiness, allSkillXp);
-
-        if (categoryXpDict[skill.category.name] !== undefined) {
-            list = list.concat(categoryXpDict[skill.category.name]);
-        }
-
-        let skillXp = Effect.createMultiplierList(game.entityMap.values(), "skill_xp", skill);
-        list = list.concat(skillXp);
-
-        skill.xpMultiplier = Multiplier.createMultiplier(list);
+        skill.xpMultiplier = sheet.getMultiplier("skill_xp", skill);
     }
 
     for (let job of game.jobMap.values()) {
-        var list = allXp.concat(happiness, allJobXp);
-
-        if (categoryXpDict[job.category.name] !== undefined) {
-            list = list.concat(categoryXpDict[job.category.name]);
-        }
-
-        let jobXp = Effect.createMultiplierList(game.entityMap.values(), "job_xp", job);
-        list = list.concat(jobXp);
-
-        job.xpMultiplier = Multiplier.createMultiplier(list);
+        job.xpMultiplier = sheet.getMultiplier("job_xp", job);
     }
 
     for (let job of game.jobMap.values()) {
-        var list = allJobPay;
-
-        if (categoryPayDict[job.category.name] !== undefined) {
-            list = list.concat(categoryPayDict[job.category.name]);
-        }
+        var list = [];
 
         let payMultiplier = Multiplier.getMultiplier("log", {job: job, value: 10, get level() { return this.job.level }, });
         list = list.concat([payMultiplier]);
         
+        let jobPay = sheet.getMultiplierList("job_pay", job);
+        list = list.concat(jobPay);
+
         job.payMultiplier = Multiplier.createMultiplier(list);
     }
 
-    let expense = Effect.createMultiplierList(game.entityMap.values(), "expense");
-
     for (let item of game.itemMap.values()) {
-        item.expenseMultiplier = Multiplier.createMultiplier(expense);
+        item.expenseMultiplier = sheet.getMultiplier("expense");
     }
 }
 
