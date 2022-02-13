@@ -11,7 +11,7 @@ export default class Task extends Base {
     }
 
     getMaxXp() {
-        var maxXp = Math.round(this.base.maxXp * (this.level + 1) * Math.pow(1.01, this.level))
+        var maxXp = Math.round(this.base.maxXp * (1 + 0.5 * this.level) * Math.pow(1.01, this.level))
         return maxXp
     }
 
