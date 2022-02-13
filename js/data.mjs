@@ -95,15 +95,12 @@ function setMulipliers(game) {
     }
 
     for (let job of game.jobMap.values()) {
-        var list = [];
-
-        let payMultiplier = Multiplier.getMultiplier("log", {job: job, value: 10, get level() { return this.job.level }, });
-        list = list.concat([payMultiplier]);
+        let payMultiplier = new Multiplier("log", {job: job, value: 10, get level() { return this.job.level }, });
         
-        let jobPay = sheet.getMultiplierList("job_pay", job);
-        list = list.concat(jobPay);
+        let jobPay = sheet.getMultiplier("job_pay", job);
+        payMultiplier = Multiplier.concat(payMultiplier, jobPay);
 
-        job.payMultiplier = Multiplier.createMultiplier(list);
+        job.payMultiplier = payMultiplier;
     }
 
     for (let item of game.itemMap.values()) {

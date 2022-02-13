@@ -24,11 +24,7 @@ const effectNamers = {
 export default class Effect {
 
     static createMultiplier(entityList, type, targetEntity) {
-        return Multiplier.createMultiplier(this.createMultiplierList(entityList, type, targetEntity));
-    }
-
-    static createMultiplierList(entityList, type, targetEntity) {
-        let multiplierList = [];
+        let multiplier;
 
         for (let entity of entityList) {
             if (entity.effect !== undefined && entity.effect.type == type) {
@@ -54,11 +50,11 @@ export default class Effect {
                     }
                 }
 
-                multiplierList.push(entity.effect.multiplier);
+                multiplier = Multiplier.concat(multiplier, entity.effect.multiplier);
             }
         }
 
-        return multiplierList;
+        return multiplier;
     }
 
     constructor(base, parent) {
@@ -67,7 +63,8 @@ export default class Effect {
         this.type = this.base.type;
 
         this.namer =  effectNamers[this.type];
-        this.multiplier = Multiplier.getMultiplier(this.base.multiplier, this);
+        this.multiplier = new Multiplier(this.base.multiplier, this);
+
         this.descriptionMultiplier = this.multiplier;
     }
 
@@ -80,13 +77,9 @@ export default class Effect {
     }
 
     get description() {
-        var name;
-        if (typeof this.namer === 'function') {
-            name = this.namer();
-        } else {
-            name = this.namer;
-        }
-        var text = "x" + String(this.descriptionMultiplier().toFixed(2)) + " " + name;
+        var name = (typeof this.namer === 'function') ? this.namer() : this.namer;
+
+        var text = "x" + String(this.descriptionMultiplier.apply(1).toFixed(2)) + " " + name;
         return text;
     }
 }

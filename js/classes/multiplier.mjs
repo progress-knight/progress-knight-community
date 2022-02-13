@@ -16,23 +16,48 @@ const effectMultipliers = {
     },
 }
 
-export default class Multiplier {
-    static getMultiplier(name, object) {
-        return effectMultipliers[name].bind(object);
+export default class Multiplier extends Function {
+
+    static concat(...multipliers) {
+        let n = new Multiplier();
+
+        for (let m of multipliers) {
+            if (m !== undefined) {
+                n.functions = n.functions.concat(m.functions);
+            }
+        }
+
+        return n;
     }
 
-    static createMultiplier(list) {
-        var multiplierList = list;
+    functions = [];
 
-        return function(value, decimal = 0) {
-            let finalMultiplier = 1;
-            multiplierList.forEach(function(multiplierFunction) {
-                let multiplier = multiplierFunction();
-                finalMultiplier *= multiplier;
-            });
-            let powerOfTen = Math.pow(10, decimal);
-            let finalValue = Math.round(value * finalMultiplier * powerOfTen) / powerOfTen;
-            return finalValue;
+    constructor(name, object) {
+        super();
+
+        if (name !== undefined) {
+            this.functions.push(effectMultipliers[name].bind(object));
         }
+
+        return new Proxy(this, {
+            apply: (target, thisArg, args) => target.process(...args)
+        });
+    }
+
+    process(value, decimal = 0) {
+        var finalMultiplier = 1;
+        this.functions.forEach((func) => {
+            let multiplier = func();
+            finalMultiplier *= multiplier;
+        });
+        let powerOfTen = Math.pow(10, decimal);
+        let finalValue = Math.round(value * finalMultiplier * powerOfTen) / powerOfTen;
+        return finalValue;
+    }
+
+    wrap(func) {
+        let wrapper = new Multiplier();
+        wrapper.functions.push(() => func(this));
+        return wrapper;
     }
 };
