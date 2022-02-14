@@ -2,10 +2,14 @@ import HUD from "./hud.mjs";
 import Tab from "./tab.mjs";
 
 export default function UI(document, game) {
-    HUD(document, game);
-    Tab(document, game);
+    let hudUpdate = HUD(document, game);
+    let tabUpdate = Tab(document, game);
 
-    updateAdvancement(document, game);
+    return function() {
+        hudUpdate();
+        tabUpdate();
+        updateAdvancement(document, game);
+    }
 }
 
 function updateAdvancement(document, game) {

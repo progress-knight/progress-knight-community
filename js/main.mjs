@@ -13,11 +13,12 @@ globalThis.main = function() {
 function mainInit() {
     globalThis.game = initGame();
     readSave(game);
+    globalThis.uiUpdate = UI(globalThis.document, game);
 }
 
 function mainUpdate() {
     game.update(getGameTimeDelta() / 1000);
-    UI(globalThis.document, game);
+    globalThis.uiUpdate();
 }
 
 function mainAutoSave() {

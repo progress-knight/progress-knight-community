@@ -2,41 +2,45 @@ import {daysToYears, days, } from "../utils/days.mjs"
 import {importSave, exportSave, resetSave, } from "../utils/save.mjs"
 import {formatCoins, formatNumber, } from "./format.mjs"
 
-var init = false;
-
 export default function HUD(document, game) {
-    if (!init) {
-        document.getElementById("pauseButton").addEventListener("click", function() { setPause(game); });
-        document.getElementById("timeWarpingButton").addEventListener("click", function() { setTimeWarping(game); });
-        document.getElementById("autoPromote").addEventListener("click", function() { autoPromote(game, this.checked); });
-        document.getElementById("autoLearn").addEventListener("click", function() { autoLearn(game, this.checked); });
-        document.getElementById("LightDarkModeButton").addEventListener("click", function() { setLightDarkMode(game); });
-        document.getElementById("rebirthOne").addEventListener("click", function() { rebirthOne(game); });
-        document.getElementById("rebirthTwo").addEventListener("click", function() { rebirthTwo(game); });
 
-        document.getElementById("importSave").addEventListener("click", function() { domImportSave(document); });
-        document.getElementById("exportSave").addEventListener("click", function() { domExportSave(document); });
-        document.getElementById("resetSave").addEventListener("click", function() { resetSave(); });
-        init = true;
+    document.getElementById("pauseButton").addEventListener("click", function() { setPause(game); });
+    document.getElementById("timeWarpingButton").addEventListener("click", function() { setTimeWarping(game); });
+    document.getElementById("autoPromote").addEventListener("click", function() { autoPromote(game, this.checked); });
+    document.getElementById("autoLearn").addEventListener("click", function() { autoLearn(game, this.checked); });
+    document.getElementById("LightDarkModeButton").addEventListener("click", function() { setLightDarkMode(game); });
+    document.getElementById("rebirthOne").addEventListener("click", function() { rebirthOne(game); });
+    document.getElementById("rebirthTwo").addEventListener("click", function() { rebirthTwo(game); });
+
+    document.getElementById("importSave").addEventListener("click", function() { domImportSave(document); });
+    document.getElementById("exportSave").addEventListener("click", function() { domExportSave(document); });
+    document.getElementById("resetSave").addEventListener("click", function() { resetSave(); });
+
+    return function() {
+        document.getElementById("ageDisplay").textContent = daysToYears(game.days);
+        document.getElementById("dayDisplay").textContent = days(game.days);
+        document.getElementById("lifespanDisplay").textContent = daysToYears(game.lifespan);
+        document.getElementById("pauseButton").textContent = game.paused ? "Play" : "Pause"
+    
+        formatCoins(game.coins, document.getElementById("coinDisplay"))
+        formatCoins(game.net, document.getElementById("netDisplay"))
+        formatCoins(game.income, document.getElementById("incomeDisplay"))
+        formatCoins(game.expense, document.getElementById("expenseDisplay"))
+    
+        formatNumber(game.happiness, document.getElementById("happinessDisplay"));
+        formatNumber(game.evil, document.getElementById("evilDisplay"));
+        formatNumber(game.evilGain, document.getElementById("evilGainDisplay"));
+    
+        document.getElementById("timeWarpingDisplay").textContent = "x" + game.timeWarpingSpeed;
+        document.getElementById("timeWarpingButton").textContent = game.timeWarpingEnabled ? "Disable warp" : "Enable warp"
+    
+        updateSignDisplay(document, game);
+        updateQuickTaskDisplay("job", game.currentJob);
+        updateQuickTaskDisplay("skill", game.currentSkill);
     }
+}
 
-    document.getElementById("ageDisplay").textContent = daysToYears(game.days);
-    document.getElementById("dayDisplay").textContent = days(game.days);
-    document.getElementById("lifespanDisplay").textContent = daysToYears(game.lifespan);
-    document.getElementById("pauseButton").textContent = game.paused ? "Play" : "Pause"
-
-    formatCoins(game.coins, document.getElementById("coinDisplay"))
-    formatCoins(game.net, document.getElementById("netDisplay"))
-    formatCoins(game.income, document.getElementById("incomeDisplay"))
-    formatCoins(game.expense, document.getElementById("expenseDisplay"))
-
-    formatNumber(game.happiness, document.getElementById("happinessDisplay"));
-    formatNumber(game.evil, document.getElementById("evilDisplay"));
-    formatNumber(game.evilGain, document.getElementById("evilGainDisplay"));
-
-    document.getElementById("timeWarpingDisplay").textContent = "x" + game.timeWarpingSpeed;
-    document.getElementById("timeWarpingButton").textContent = game.timeWarpingEnabled ? "Disable warp" : "Enable warp"
-
+function updateSignDisplay(document, game) {
     var signDisplay = document.getElementById("signDisplay");
     if (game.income > game.expense) {
         signDisplay.textContent = "+"
@@ -55,9 +59,6 @@ export default function HUD(document, game) {
     } else {
         deathText.classList.add("hidden");
     }
-
-    updateQuickTaskDisplay("job", game.currentJob);
-    updateQuickTaskDisplay("skill", game.currentSkill);
 }
 
 function updateQuickTaskDisplay(taskType, currentTask) {
