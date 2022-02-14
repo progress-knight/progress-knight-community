@@ -1,24 +1,80 @@
 import Multiplier from "./multiplier.mjs"
 
-const effectNamers = {
-    "happiness":    "Happiness",
-    "expense":      "Expense",
-    "all_xp":       "All xp",
-    "all_skill_xp": "Skill xp",
-    "all_job_xp":   "Job xp",
-    "category_xp": function () {
-        return this.base.category + " xp";
+let filterCategory = function (entity) {
+    if (entity === undefined 
+        || (entity.name != this.base.category &&
+            entity.group != this.base.category)) {
+        return true;
+    }
+    return false;
+};
+
+let filterSkill = function (entity) {
+    if (entity === undefined || entity.name != this.base.skill) {
+        return true;
+    }
+    return false;
+};
+
+let filterJob = function (entity) {
+    if (entity === undefined || entity.name != this.base.job) {
+        return true;
+    }
+    return false;
+};
+
+const effectDescriptors = {
+    "happiness": {
+        "namer": "Happiness",
     },
-    "skill_xp": function () {
-        return this.base.skill + " xp";
+    "expense": {
+        "namer": "Expense",
     },
-    "all_job_pay":  "Job pay",
-    "category_pay": function () {
-        return this.base.category + " pay";
+    "all_xp": {
+        "namer": "All xp",
     },
-    "lifespan":     "Longer lifespan",
-    "gamespeed":    "Gamespeed",
-    "evil":         "Evil",
+    "all_skill_xp": {
+        "namer": "Skill xp",
+    },
+    "all_job_xp": {
+        "namer": "Job xp"
+    },
+    "category_xp": {
+        "namer": function () {
+            return this.base.category + " xp";
+        },
+        "filter": filterCategory,
+    },
+    "skill_xp": {
+        "namer": function () {
+            return this.base.skill + " xp";
+        },
+        "filter": filterSkill,
+    },
+    "job_xp": {
+        "namer": function () {
+            return this.base.job + " xp";
+        },
+        "filter": filterJob,
+    },
+    "all_job_pay": {
+        "namer": "Job pay",
+    },
+    "category_pay": {
+        "namer": function () {
+            return this.base.category + " pay";
+        },
+        "filter": filterCategory,
+    },
+    "lifespan": {
+        "namer": "Longer lifespan",
+    },
+    "gamespeed": {
+        "namer": "Gamespeed",
+    },
+    "evil": {
+        "namer": "Evil",
+    },
 }
 
 export default class Effect {
@@ -28,26 +84,15 @@ export default class Effect {
 
         for (let entity of entityList) {
             if (entity.effect !== undefined && entity.effect.type == type) {
-                if (entity.effect.type.indexOf("skill") == 0) {
-                    if (targetEntity === undefined
-                        || targetEntity.name != entity.effect.base.skill) {
-                        continue;
-                    }
+
+                var filter = false;
+
+                if (entity.effect.filter !== undefined) {
+                    filter = entity.effect.filter(targetEntity);
                 }
 
-                if (entity.effect.type.indexOf("job") == 0) {
-                    if (targetEntity === undefined
-                        || targetEntity.name != entity.effect.base.job) {
-                        continue;
-                    }
-                }
-
-                if (entity.effect.type.indexOf("category") == 0) {
-                    if (targetEntity === undefined 
-                        || (targetEntity.name != entity.effect.base.category &&
-                            targetEntity.group != entity.effect.base.category)) {
-                        continue;
-                    }
+                if (filter) {
+                    continue;
                 }
 
                 multiplier = Multiplier.concat(multiplier, entity.effect.multiplier);
@@ -62,7 +107,15 @@ export default class Effect {
         this.parent = parent;
         this.type = this.base.type;
 
-        this.namer =  effectNamers[this.type];
+        if (effectDescriptors[this.type] !== undefined) {
+            if (effectDescriptors[this.type].namer !== undefined) {
+                this.namer = effectDescriptors[this.type].namer;
+            }
+            if (effectDescriptors[this.type].filter !== undefined) {
+                this.filter = effectDescriptors[this.type].filter;
+            }
+        }
+        
         this.multiplier = new Multiplier(this.base.multiplier, this);
 
         this.descriptionMultiplier = this.multiplier;
@@ -79,7 +132,7 @@ export default class Effect {
     get description() {
         var name = (typeof this.namer === 'function') ? this.namer() : this.namer;
 
-        var text = "x" + String(this.descriptionMultiplier.apply(1).toFixed(2)) + " " + name;
+        var text = "x" + String(this.descriptionMultiplier(1, 2).toFixed(2)) + " " + name;
         return text;
     }
 }
