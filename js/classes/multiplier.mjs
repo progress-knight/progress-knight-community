@@ -55,9 +55,11 @@ export default class Multiplier extends Function {
         return finalValue;
     }
 
-    wrap(func) {
+    conditionnal(func) {
         let wrapper = new Multiplier();
-        wrapper.functions.push(() => func(this));
+        wrapper.functions = this.functions.map((f) => {
+            return () => func() ? f() : 1;
+        });
         return wrapper;
     }
 };

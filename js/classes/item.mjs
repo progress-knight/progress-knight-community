@@ -1,6 +1,5 @@
 import Base from "./base.mjs"
 import Effect from "./effect.mjs";
-import Multiplier from "./multiplier.mjs";
 
 export default class Item extends Base {
     constructor(base, name) {  
@@ -15,7 +14,7 @@ export default class Item extends Base {
             }
 
             this.effect = new Effect(base.effect, this);
-            this.effect.multiplier = this.effect.multiplier.wrap((wrapped) => this.active ? wrapped(1) : 1);
+            this.effect.multiplier = this.effect.multiplier.conditionnal(() => this.active);
         }
 
         if (this.requirement.base === undefined) {
